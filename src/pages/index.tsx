@@ -10,12 +10,19 @@ import Authorization from "@/components/Authorization";
 import EmployeesList from "@/components/EmployeesList";
 import { useUser } from "@/store/zustand";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import en from "../../public/locales/en";
+import de from "../../public/locales/de";
+import Internationalization from "@/components/Internalization";
 
 const DynamicSpinner = dynamic(() => import("../components/Spinner"), {
   ssr: false,
 });
 
 const Home: NextPage = () => {
+  const router = useRouter();
+  const { locale } = router;
+  const t = locale === "en" ? en : de;
   const { checkAuth, isError, isAuth, isLoading, user, logout } = useUser(
     (state: any) => state
   );
@@ -32,9 +39,7 @@ const Home: NextPage = () => {
   }, []);
 
   const handleToast = (isSuccess: boolean) => {
-    isSuccess
-      ? toast.success("completed successfully!")
-      : toast.error("error, operation failed!");
+    isSuccess ? toast.success(t.completed) : toast.error(t.error);
   };
 
   if (isError) {
@@ -58,6 +63,7 @@ const Home: NextPage = () => {
       <>
         <div className="flex justify-center">
           <div className="w-[500px]">
+            <Internationalization />
             {isLogin ? (
               <>
                 <Authorization isLogin={true} handleToast={handleToast} />
@@ -65,7 +71,7 @@ const Home: NextPage = () => {
                   className="pt-3 w-[100%] text-end hover:text-red-500"
                   onClick={() => setIsLogin(false)}
                 >
-                  Registration
+                  {t.registration}
                 </button>
               </>
             ) : (
@@ -75,7 +81,7 @@ const Home: NextPage = () => {
                   className="pt-3 w-[100%] text-end hover:text-red-500"
                   onClick={() => setIsLogin(true)}
                 >
-                  Authorization
+                  {t.authorization}
                 </button>
               </>
             )}
@@ -87,17 +93,17 @@ const Home: NextPage = () => {
     return (
       <>
         <Head>
-          <title>Employee list</title>
+          <title>{t.employeeList}</title>
         </Head>
         <div className="flex justify-center text-center">
           <div>
+            <Internationalization />
             <h1 className="text-2xl font-bold pt-6">
-              {isAuth ? `User ${user.email} is authorized` : "AUTHORIZE"}
+              {isAuth &&
+                `${t.userIsAuthorized1} ${user.email} ${t.userIsAuthorized2}`}
             </h1>
             <h1 className="text-2xl font-bold">
-              {user.isActivated
-                ? "Account verified by Email"
-                : "CONFIRM ACCOUNT BY EMAIL!!!!"}
+              {!user.isActivated && t.confirmAccount}
             </h1>
             {!user.isActivated && (
               <button
@@ -106,7 +112,7 @@ const Home: NextPage = () => {
                 }}
                 className="text-white bg-gray-400 hover:bg-gray-500 px-[70px] py-[9px] mt-3 duration-500 transform rounded-[5px] font-bold text-base"
               >
-                Back
+                {t.back}
               </button>
             )}
           </div>

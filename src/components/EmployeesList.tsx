@@ -21,8 +21,13 @@ import { ToastContainer, toast } from "react-toastify";
 import { useEmployees, useUser } from "@/store/zustand";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import en from "../../public/locales/en";
+import de from "../../public/locales/de";
 
 const EmployeesList = () => {
+  const router = useRouter();
+  const { locale } = router;
+  const t = locale === "en" ? en : de;
   const logout = useUser((state: any) => state.logout);
   const { getEmployees, isError, employees } = useEmployees(
     (state: any) => state
@@ -37,9 +42,7 @@ const EmployeesList = () => {
   }, []);
 
   const handleToast = (isSuccess: boolean) => {
-    isSuccess
-      ? toast.success("completed successfully!")
-      : toast.error("error, operation failed!");
+    isSuccess ? toast.success(t.completed) : toast.error(t.error);
   };
 
   const handleDeleteEmployee = (id: string | undefined) => {
@@ -64,7 +67,7 @@ const EmployeesList = () => {
   return (
     <>
       <Head>
-        <title>Employee list</title>
+        <title>{t.employeeList}</title>
       </Head>
       <main className=" flex justify-center items-center">
         {isAddNewEmployee && (
@@ -84,14 +87,14 @@ const EmployeesList = () => {
         )}
 
         <div className="text-center pt-[15px]">
-          <h1 className="text-2xl font-bold">Employee list</h1>
+          <h1 className="text-2xl font-bold">{t.employeeList}</h1>
           <button
             onClick={() => {
               setIsAddNewEmployee(true);
             }}
             className="text-white bg-red-600 hover:bg-red-500 px-[70px] py-[9px] mt-3 duration-500 rounded-[5px] font-bold text-base"
           >
-            Add New Employee
+            {t.addEmployee}
           </button>
           <button
             onClick={() => {
@@ -99,16 +102,16 @@ const EmployeesList = () => {
             }}
             className="text-white bg-gray-400 hover:bg-gray-500 px-[70px] py-[9px] mt-3 duration-500 transform rounded-[5px] font-bold text-base ml-5"
           >
-            Logout
+            {t.logout}
           </button>
           <TableContainer className="mt-3">
             {employees.length !== 0 ? (
               <Table variant="striped" colorScheme="blue">
                 <Thead>
                   <Tr>
-                    <Th>first name</Th>
-                    <Th>last name</Th>
-                    <Th>Actions</Th>
+                    <Th>{t.firstname}</Th>
+                    <Th>{t.lastname}</Th>
+                    <Th>{t.actions}</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -152,7 +155,7 @@ const EmployeesList = () => {
                 </Tbody>
               </Table>
             ) : (
-              <p className="text-lg">List is empty</p>
+              <p className="text-lg">{t.listIsEmpty}</p>
             )}
           </TableContainer>
         </div>

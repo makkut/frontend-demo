@@ -10,7 +10,10 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
+import { useRouter } from "next/router";
 import NumberFormat from "react-number-format";
+import en from "../../public/locales/en";
+import de from "../../public/locales/de";
 
 const ModalEmployee = ({
   setIsModal,
@@ -18,10 +21,13 @@ const ModalEmployee = ({
   initialValues,
   onSubmit,
 }: any) => {
+  const router = useRouter();
+  const { locale } = router;
+  const t = locale === "en" ? en : de;
   function validateName(value: any) {
     let error;
     if (!value) {
-      error = "Field is required";
+      error = t.fieldIsRequired;
     }
     return error;
   }
@@ -38,7 +44,7 @@ const ModalEmployee = ({
         <ModalOverlay />
         <ModalContent maxHeight={600} maxWidth={800} rounded={45}>
           <ModalHeader pt={30} textAlign={"center"} pb={-10}>
-            Add New Employee
+            {t.addEmployee}
           </ModalHeader>
           <ModalBody pb={30} px={55}>
             <Formik initialValues={initialValues} onSubmit={onSubmit}>
@@ -54,10 +60,10 @@ const ModalEmployee = ({
                           marginRight={10}
                           height={85}
                         >
-                          <FormLabel className="!mb-0">First name</FormLabel>
+                          <FormLabel className="!mb-0">{t.firstname}</FormLabel>
                           <Input
                             {...field}
-                            placeholder="first name"
+                            placeholder={t.firstname}
                             type="text"
                             maxLength={50}
                           />
@@ -75,10 +81,10 @@ const ModalEmployee = ({
                           }
                           height={85}
                         >
-                          <FormLabel className="!mb-0">Last name</FormLabel>
+                          <FormLabel className="!mb-0">{t.lastname}</FormLabel>
                           <Input
                             {...field}
-                            placeholder="last name"
+                            placeholder={t.lastname}
                             type="text"
                             maxLength={50}
                           />
@@ -99,10 +105,10 @@ const ModalEmployee = ({
                           marginRight={10}
                           height={85}
                         >
-                          <FormLabel className="!mb-0">Birthday</FormLabel>
+                          <FormLabel className="!mb-0">{t.birthdate}</FormLabel>
                           <Input
                             {...field}
-                            placeholder="birthdate"
+                            placeholder={t.birthdate}
                             type="date"
                           />
                           <FormErrorMessage marginTop={0.5}>
@@ -117,10 +123,10 @@ const ModalEmployee = ({
                           isInvalid={form.errors.phone && form.touched.phone}
                           height={85}
                         >
-                          <FormLabel className="!mb-0">Phone</FormLabel>
+                          <FormLabel className="!mb-0">{t.phone}</FormLabel>
                           <Input
                             {...field}
-                            placeholder="phone"
+                            placeholder={t.phone}
                             type="text"
                             maxLength={20}
                           />
@@ -139,10 +145,10 @@ const ModalEmployee = ({
                           marginRight={10}
                           height={85}
                         >
-                          <FormLabel className="!mb-0">City</FormLabel>
+                          <FormLabel className="!mb-0">{t.city}</FormLabel>
                           <Input
                             {...field}
-                            placeholder="city"
+                            placeholder={t.city}
                             type="text"
                             maxLength={40}
                           />
@@ -158,11 +164,11 @@ const ModalEmployee = ({
                           isInvalid={form.errors.phone && form.touched.phone}
                           height={85}
                         >
-                          <FormLabel className="!mb-0">Zip</FormLabel>
+                          <FormLabel className="!mb-0">{t.zip}</FormLabel>
                           <Input
                             as={NumberFormat}
                             {...field}
-                            placeholder="zip"
+                            placeholder={t.zip}
                             type="number"
                             maxLength={10}
                           />
@@ -181,10 +187,10 @@ const ModalEmployee = ({
                           marginRight={10}
                           height={85}
                         >
-                          <FormLabel className="!mb-0">Street</FormLabel>
+                          <FormLabel className="!mb-0">{t.street}</FormLabel>
                           <Input
                             {...field}
-                            placeholder="street"
+                            placeholder={t.street}
                             type="text"
                             maxLength={40}
                           />
@@ -200,10 +206,10 @@ const ModalEmployee = ({
                           isInvalid={form.errors.number && form.touched.number}
                           height={85}
                         >
-                          <FormLabel className="!mb-0">Number</FormLabel>
+                          <FormLabel className="!mb-0">{t.number}</FormLabel>
                           <Input
                             {...field}
-                            placeholder="number"
+                            placeholder={t.number}
                             type="text"
                             maxLength={20}
                           />
@@ -219,13 +225,13 @@ const ModalEmployee = ({
                       type="submit"
                       className="text-white bg-red-600 hover:bg-red-500 px-[70px] py-[9px] mt-3 duration-500 transform rounded-[5px] font-bold text-base mr-10"
                     >
-                      Confirm
+                      {t.confirm}
                     </button>
                     <button
                       onClick={() => setIsModal(false)}
                       className="text-white bg-gray-400 hover:bg-gray-500 px-[70px] py-[9px] mt-3 duration-500 transform rounded-[5px] font-bold text-base"
                     >
-                      Cancel
+                      {t.cancel}
                     </button>
                   </div>
                 </Form>

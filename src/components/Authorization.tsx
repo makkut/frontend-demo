@@ -8,23 +8,31 @@ import {
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { FC } from "react";
 import { ToastContainer } from "react-toastify";
+import en from "../../public/locales/en";
+import de from "../../public/locales/de";
 
 const Authorization: FC<IAuthorisation> = ({ isLogin }) => {
+  const router = useRouter();
+  const { locale } = router;
+  const t = locale === "en" ? en : de;
   const { login, registration } = useUser((state: any) => state);
 
   function validateName(value: any) {
     let error;
     if (!value) {
-      error = "Field is required";
+      error = t.fieldIsRequired;
     }
     return error;
   }
   return (
     <>
       <Head>
-        <title>Authorization | Employee list</title>
+        <title>
+          {t.authorization} | {t.employeeList}
+        </title>
       </Head>
       <Formik
         initialValues={{
@@ -87,7 +95,7 @@ const Authorization: FC<IAuthorisation> = ({ isLogin }) => {
                 type="submit"
                 className="text-white bg-red-600 hover:bg-red-500 px-[70px] py-[9px] mt-3 duration-500 transform rounded-[5px] font-bold text-base "
               >
-                {isLogin ? "Authorization" : "Registration"}
+                {isLogin ? t.authorization : t.registration}
               </button>
             </div>
           </Form>

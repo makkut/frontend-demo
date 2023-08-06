@@ -7,7 +7,7 @@ import {
   ModalHeader,
   ModalBody,
 } from "@chakra-ui/react";
-import { FC, useContext } from "react";
+import { FC } from "react";
 
 const DeleteModal: FC<DeleteModalProps> = ({
   id,
