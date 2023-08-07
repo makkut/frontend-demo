@@ -7,7 +7,10 @@ import {
   ModalHeader,
   ModalBody,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { FC } from "react";
+import en from "../../public/locales/en";
+import de from "../../public/locales/de";
 
 const DeleteModal: FC<DeleteModalProps> = ({
   id,
@@ -15,6 +18,9 @@ const DeleteModal: FC<DeleteModalProps> = ({
   setIsDeleteModal,
   handleToast,
 }) => {
+  const router = useRouter();
+  const { locale } = router;
+  const t = locale === "en" ? en : de;
   const { deleteEmployee } = useEmployees((state: any) => state);
   return (
     <>
@@ -27,9 +33,7 @@ const DeleteModal: FC<DeleteModalProps> = ({
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader textAlign={"center"}>
-            Are you sure you want to delete it?
-          </ModalHeader>
+          <ModalHeader textAlign={"center"}>{t.deleteMessage}</ModalHeader>
           <ModalBody>
             <div className="flex justify-center pb-4">
               <button
@@ -44,7 +48,7 @@ const DeleteModal: FC<DeleteModalProps> = ({
                 }}
                 className="text-white bg-red-600 hover:bg-red-500 px-[50px] py-[9px] mt-3 duration-500 transform rounded-[5px] font-bold text-base mr-10"
               >
-                Delete
+                {t.delete}
               </button>
               <button
                 onClick={() => {
@@ -52,7 +56,7 @@ const DeleteModal: FC<DeleteModalProps> = ({
                 }}
                 className="text-white bg-gray-400 hover:bg-gray-500 px-[50px] py-[9px] mt-3 duration-500 transform rounded-[5px] font-bold text-base"
               >
-                Cancel
+                {t.cancel}
               </button>
             </div>
           </ModalBody>

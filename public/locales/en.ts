@@ -24,4 +24,6 @@ export default {
   userIsAuthorized2: " is authorized",
   completed: "completed successfully!",
   error: "error, operation failed!",
+  deleteMessage: "Are you sure you want to delete it?",
+  delete: "Delete",
 };
