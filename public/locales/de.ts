@@ -26,4 +26,5 @@ export default {
   error: "error, operation failed!",
   deleteMessage: "Sind Sie sicher, dass Sie dies löschen möchten?",
   delete: "Löschen",
+  notAuth: "Benutzer ist nicht autorisiert",
 };
