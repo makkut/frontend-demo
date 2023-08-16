@@ -11,35 +11,29 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import dynamic from "next/dynamic";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { RiDeleteBin6Line, RiEditBoxLine } from "react-icons/ri";
 import { GrDocumentPdf } from "react-icons/gr";
 import DeleteModal from "@/components/DeleteModal";
 import { ToastContainer, toast } from "react-toastify";
-import { useEmployees, useUser } from "@/store/zustand";
+import { useUser } from "@/store/zustand";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import en from "../../public/locales/en";
 import de from "../../public/locales/de";
+import { useGetEmployees } from "@/store/useCustomQuery";
 
 const EmployeesList = () => {
   const router = useRouter();
   const { locale } = router;
   const t = locale === "en" ? en : de;
   const logout = useUser((state: any) => state.logout);
-  const { getEmployees, isError, employees } = useEmployees(
-    (state: any) => state
-  );
+  const { data, isError } = useGetEmployees();
   const [isAddNewEmployee, setIsAddNewEmployee] = useState(false);
   const [isEditEmployee, setIsEditEmployee] = useState(false);
   const [isDeleteModal, setIsDeleteModal] = useState(false);
   const [idEmployee, setIdEmployee] = useState<string | undefined>();
-
-  useEffect(() => {
-    getEmployees();
-  }, []);
 
   const handleToast = (isSuccess: boolean) => {
     isSuccess ? toast.success(t.completed) : toast.error(t.error);
@@ -105,7 +99,7 @@ const EmployeesList = () => {
             {t.logout}
           </button>
           <TableContainer className="mt-3">
-            {employees.length !== 0 ? (
+            {data ? (
               <Table variant="striped" colorScheme="blue">
                 <Thead>
                   <Tr>
@@ -115,7 +109,7 @@ const EmployeesList = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {employees.map((e: EmployeeInterface) => (
+                  {data.map((e: EmployeeInterface) => (
                     <Tr key={e._id}>
                       <Td>{e.firstname}</Td>
                       <Td>{e.lastname}</Td>

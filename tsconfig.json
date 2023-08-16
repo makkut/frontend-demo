@@ -22,7 +22,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "src/store/employeesApi.js"
+    "src/store/employeesApi.js",
+    "src/store/useCustomQuery.ts"
   ],
   "exclude": ["node_modules"]
 }

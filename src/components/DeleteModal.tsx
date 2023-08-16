@@ -1,5 +1,4 @@
 import { DeleteModalProps } from "@/interfaces/interfaces";
-import { useEmployees } from "@/store/zustand";
 import {
   Modal,
   ModalOverlay,
@@ -7,10 +6,12 @@ import {
   ModalHeader,
   ModalBody,
 } from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { FC } from "react";
 import en from "../../public/locales/en";
 import de from "../../public/locales/de";
+import EmployeeService from "@/services/EmployeeService";
 
 const DeleteModal: FC<DeleteModalProps> = ({
   id,
@@ -21,7 +22,14 @@ const DeleteModal: FC<DeleteModalProps> = ({
   const router = useRouter();
   const { locale } = router;
   const t = locale === "en" ? en : de;
-  const { deleteEmployee } = useEmployees((state: any) => state);
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: (id: string | undefined) => EmployeeService.deleteEmployee(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+    },
+  });
+
   return (
     <>
       <Modal
@@ -39,7 +47,7 @@ const DeleteModal: FC<DeleteModalProps> = ({
               <button
                 onClick={async () => {
                   try {
-                    await deleteEmployee(id);
+                    await mutate(id);
                     setIsDeleteModal(false);
                     handleToast(true);
                   } catch (error) {

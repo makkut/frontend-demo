@@ -1,9 +1,8 @@
-import { useEmployees } from "@/store/zustand";
 import _ from "lodash";
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useGetEmployee } from "@/store/useCustomQuery";
 import en from "../../../public/locales/en";
 import de from "../../../public/locales/de";
 
@@ -22,12 +21,7 @@ const PDFPage: NextPage = () => {
   const router = useRouter();
   const { locale } = router;
   const t = locale === "en" ? en : de;
-  const { getEmployee, employee, isLoading } = useEmployees(
-    (state: any) => state
-  );
-  useEffect(() => {
-    getEmployee(router.query.id);
-  }, [router.query.id]);
+  const { data, isLoading } = useGetEmployee(router?.query?.id?.toString());
 
   if (isLoading) {
     return (
@@ -39,8 +33,8 @@ const PDFPage: NextPage = () => {
 
   return (
     <>
-      {!_.isEmpty(employee) ? (
-        <DynamicPDFGenerator employee={employee} />
+      {!_.isEmpty(data) ? (
+        <DynamicPDFGenerator employee={data} />
       ) : (
         <div className="flex justify-center text-center">
           <div>

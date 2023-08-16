@@ -1,12 +1,15 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import dynamic from "next/dynamic";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  EmployeeInterface,
   EmployeeInterfaceValue,
   EmployeesProps,
 } from "@/interfaces/interfaces";
-import ModalEmployee from "./ModalEmployee";
-import { useEmployees } from "@/store/zustand";
 import _ from "lodash";
+import { useGetEmployee } from "@/store/useCustomQuery";
+import EmployeeService from "@/services/EmployeeService";
+import ModalEmployee from "./ModalEmployee";
 
 const DynamicSpinner = dynamic(() => import("../components/Spinner"), {
   ssr: false,
@@ -18,17 +21,20 @@ const Employees: FC<EmployeesProps> = ({
   isEdit,
   handleToast,
 }) => {
-  const { getEmployee, updateEmployee, employee } = useEmployees(
-    (state: any) => state
-  );
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    getEmployee(id);
-  }, []);
+  const { data } = useGetEmployee(id);
+  const { mutate } = useMutation({
+    mutationFn: (body: EmployeeInterface) =>
+      EmployeeService.updateEmployee(body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+    },
+  });
 
   const onSubmit = async (values: EmployeeInterfaceValue) => {
     try {
-      await updateEmployee(id, {
+      mutate({
         _id: id,
         firstname: values.firstname,
         lastname: values.lastname,
@@ -50,21 +56,21 @@ const Employees: FC<EmployeesProps> = ({
 
   return (
     <>
-      {!_.isEmpty(employee) ? (
+      {!_.isEmpty(data) ? (
         <div className="flex justify-center ">
           <ModalEmployee
             setIsModal={setIsModal}
             isEdit={isEdit}
             onSubmit={onSubmit}
             initialValues={{
-              firstname: employee.firstname,
-              lastname: employee.lastname,
-              phone: employee.phone,
-              birthdate: employee.birthdate.split(".").reverse().join("-"),
-              city: employee.address.city,
-              zip: employee.address.zip,
-              street: employee.address.street,
-              number: employee.address.number,
+              firstname: data.firstname,
+              lastname: data.lastname,
+              phone: data.phone,
+              birthdate: data.birthdate.split(".").reverse().join("-"),
+              city: data.address.city,
+              zip: data.address.zip,
+              street: data.address.street,
+              number: data.address.number,
             }}
           />
         </div>
